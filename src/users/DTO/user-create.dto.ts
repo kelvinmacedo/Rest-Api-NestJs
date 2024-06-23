@@ -15,5 +15,5 @@ export class UsersCreateDto {
     minSymbols : 1,
     minUppercase : 1,
   })
-  password : string;
+  senha : string;
 }
