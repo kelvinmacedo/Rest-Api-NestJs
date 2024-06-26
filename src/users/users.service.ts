@@ -9,11 +9,25 @@ export class UsersService{
 
   async createUsers(data: UsersCreateDto){
     
-    await this.prisma.users.create({
+    return this.prisma.users.create({
+      data,
+    });  
+  
+  };
+
+  async listUsers(){
+    return this.prisma.users.findMany({
       
-      data: data,
+    });
+  };
+
+  async searchUserId(id : number){
+
+    return this.prisma.users.findUnique({
+      where : {
+        id
+      }
     })
-    
   }
 
 }

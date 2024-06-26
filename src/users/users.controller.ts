@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import {Body, Controller, Get, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
 import { UsersCreateDto } from "./DTO/user-create.dto";
 import { UsersService } from "./users.service";
 
@@ -9,24 +9,24 @@ export class UsersController {
   @Post()
   async CreateUsers( @Body() data : UsersCreateDto ){
     return this.usersService.createUsers(data);
-  }
+  };
 
   @Get()
   async listUsers(){
-    return {}
-  }
+    return this.usersService.listUsers();
+  };
 
-  @Get(':id')
-  async searchUserId( @Param() params ){
-    return params;
-  }
+  @Get()
+  async searchUserId( @Param( 'id', ParseIntPipe ) id: number   ){
+      return this.usersService.searchUserId(id);
+  };
 
-  @Put()
+  @Put('edit')
   async userEdit( @Body() body : UsersCreateDto, @Param() Params ){
     return{
       method : "put",
       body,
       Params
-    }
-  }
-}
+    };
+  };
+};
