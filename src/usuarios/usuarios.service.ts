@@ -1,64 +1,43 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
-import { CadastrarUsuariosDto } from "./DTO/cadastrar-usuarios.dto";
-import { AtulaizarUsuarioDto } from "./DTO/atualizar-usuario.dto";
-import { EditarUsuariosDto } from "./DTO/editar-usuarios.dto";
-
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { CadastrarUsuariosDto } from "./dto/cadastrar-usuarios.dto";
+import { AtulaizarUsuarioDto } from "./dto/atualizar-usuario.dto";
+import { EditarUsuariosDto } from "./dto/editar-usuarios.dto";
+import { UsuariosRepository } from "./repository/usuario.repository";
 @Injectable()
 export class UsuariosService {
-
-  constructor(private readonly prisma : PrismaService){}
-
-  async cadastarUsuarios (data: CadastrarUsuariosDto){
-    
-    return this.prisma.users.create ({
-      data,
-    });  
   
+  constructor( private readonly usuariosRepository : UsuariosRepository ){};
+
+  async cadastarUsuarios (data: CadastrarUsuariosDto){ 
+    const existiEmailOuId = await this.usuariosRepository.existi(undefined, data.email);
+    if (existiEmailOuId) {
+      throw new HttpException('Esse e-mail jã existe!', HttpStatus.CONFLICT);
+    }
+    return await this.usuariosRepository.criarUsuario(data);
   };
 
   async listarUsuarios (){
-    return this.prisma.users.findMany({
-    });
+    return this.usuariosRepository.listar();
   };
 
-  async busacarPorId (id : number){
-    return this.prisma.users.findUnique({
-      where : {
-        id,
-      }
-    });
+  async buscarUsuariosPorId (id : number){
+    return this.usuariosRepository.buscar(id);
   };
 
-  async editar(id: number, data: EditarUsuariosDto, ){
-    return this.prisma.users.update({
-      data,
-      where : {
-        id,
-      }
-    });
+  async editarUsuarios (id : number, data: EditarUsuariosDto, ){
+    const existiEmailOuId = await this.usuariosRepository.existi( id , data.email);
+    if (existiEmailOuId.id !== id && existiEmailOuId.email === data.email) {
+      throw new HttpException('Esse e-mail jã existe!', HttpStatus.CONFLICT);
+    }
+    return this.usuariosRepository.editar(id, data);
   };
 
   async atualizarUsuarios(id : number, data: AtulaizarUsuarioDto){
-    return this.prisma.users.update({
-      data,
-      where : {
-        id,
-      }
-    });
-  };
-
-  async existi(nomeOuEmail: string): Promise<boolean>{
-    const usuarioExiste = await this.prisma.users.findFirst({
-      where : {
-        OR : [
-          {nome : nomeOuEmail },
-          { email : nomeOuEmail },
-        ],
-      },
-    });
-
-    return!!usuarioExiste;
-
+    const existiEmailOuId = await this.usuariosRepository.existi(id, data.email);
+    console.log("🚀 ~ UsuariosService ~ atualizarUsuarios ~ existiEmailOuId:", existiEmailOuId)
+    if (existiEmailOuId.id !== id && existiEmailOuId.email === data.email) {
+      throw new HttpException('Esse e-mail jã existe!', HttpStatus.CONFLICT);
+    }
+    return this.usuariosRepository.atualizar(id, data);
   };
 }

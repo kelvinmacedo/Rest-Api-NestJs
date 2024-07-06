@@ -1,7 +1,7 @@
 import { IsEmail, IsString, IsStrongPassword } from "class-validator";
 
 export class CadastrarUsuariosDto {
-  
+
   @IsString()
   nome : string;
 

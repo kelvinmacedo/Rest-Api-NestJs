@@ -1,43 +1,37 @@
-import {Body, ConflictException, Controller, Get, Param, ParseIntPipe, Patch, Post, Put } from "@nestjs/common";
-import { CadastrarUsuariosDto } from "./DTO/cadastrar-usuarios.dto";
+import {Body, Controller, Get, HttpException, HttpStatus, Patch, Post, Put } from "@nestjs/common";
+import { CadastrarUsuariosDto } from "./dto/cadastrar-usuarios.dto";
 import { UsuariosService } from "./usuarios.service";
-import { AtulaizarUsuarioDto } from "./DTO/atualizar-usuario.dto";
-import { EditarUsuariosDto } from "./DTO/editar-usuarios.dto";
+import { AtulaizarUsuarioDto } from "./dto/atualizar-usuario.dto";
+import { EditarUsuariosDto } from "./dto/editar-usuarios.dto";
+import { ParamId } from "src/decorators/paramId.decorators";
 
 @Controller('usuarios')
 export class UsuariosController {
+
   constructor(private readonly usuariosService : UsuariosService){}
 
   @Post('cadastrar')
-  async cadastrar( @Body() data : CadastrarUsuariosDto ){
-
-    const nomeOuEmail = data.nome || data.email;
-    const usuarioExiste = await this.usuariosService.existi(nomeOuEmail);
-
-    if (usuarioExiste) {
-      throw new ConflictException('Nome ou e-mail já existe.')
-    }
-
+  async cadastrarUsuarios( @Body() data : CadastrarUsuariosDto ){
     return this.usuariosService.cadastarUsuarios(data);
   };
 
   @Get('listar')
-  async listar(){
-    return this.usuariosService.listarUsuarios();
+  async listarUsuarios(){
+    return await this.usuariosService.listarUsuarios();
   };
 
   @Get('buscarPorId/:id')
-  async buscarPorId( @Param( 'id', ParseIntPipe ) id: number   ){
-      return this.usuariosService.busacarPorId(id);
+  async buscarUsuariosPorId( @ParamId() id: number   ){
+      return this.usuariosService.buscarUsuariosPorId(id);
   };
 
   @Put('editar/:id')
-  async editar( @Body() data : EditarUsuariosDto, @Param('id', ParseIntPipe) id: number ){
-    return this.usuariosService.editar( id, data );
+  async editarUsuarios( @Body() data : EditarUsuariosDto, @ParamId() id : number){
+    return this.usuariosService.editarUsuarios(id, data);
   };
 
   @Patch('atualizar/:id')
-  async atualizar(@Body() data : AtulaizarUsuarioDto, @Param('id', ParseIntPipe) id: number){
+  async atualizarUsuarios(@Body() data : AtulaizarUsuarioDto, @ParamId() id: number){
     return this.usuariosService.atualizarUsuarios(id, data);
   };
 };
