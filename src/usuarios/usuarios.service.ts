@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CadastrarUsuariosDto } from "./dto/cadastrar-usuarios.dto";
 import { AtulaizarUsuarioDto } from "./dto/atualizar-usuario.dto";
 import { EditarUsuariosDto } from "./dto/editar-usuarios.dto";
-import { UsuariosRepository } from "./repository/usuario.repository";
+import { UsuariosRepository } from "./models/usuario.repository";
 @Injectable()
 export class UsuariosService {
   
@@ -11,7 +11,7 @@ export class UsuariosService {
   async cadastarUsuarios (data: CadastrarUsuariosDto){ 
     const existiEmailOuId = await this.usuariosRepository.existi(undefined, data.email);
     if (existiEmailOuId) {
-      throw new HttpException('Esse e-mail jã existe!', HttpStatus.CONFLICT);
+      throw new HttpException('E-mail de usuario jã existe!', HttpStatus.CONFLICT);
     }
     return await this.usuariosRepository.criarUsuario(data);
   };
@@ -27,16 +27,15 @@ export class UsuariosService {
   async editarUsuarios (id : number, data: EditarUsuariosDto, ){
     const existiEmailOuId = await this.usuariosRepository.existi( id , data.email);
     if (existiEmailOuId.id !== id && existiEmailOuId.email === data.email) {
-      throw new HttpException('Esse e-mail jã existe!', HttpStatus.CONFLICT);
+      throw new HttpException('E-mail de usuario jã existe!', HttpStatus.CONFLICT);
     }
     return this.usuariosRepository.editar(id, data);
   };
 
   async atualizarUsuarios(id : number, data: AtulaizarUsuarioDto){
     const existiEmailOuId = await this.usuariosRepository.existi(id, data.email);
-    console.log("🚀 ~ UsuariosService ~ atualizarUsuarios ~ existiEmailOuId:", existiEmailOuId)
     if (existiEmailOuId.id !== id && existiEmailOuId.email === data.email) {
-      throw new HttpException('Esse e-mail jã existe!', HttpStatus.CONFLICT);
+      throw new HttpException('E-mail de usuario jã existe!', HttpStatus.CONFLICT);
     }
     return this.usuariosRepository.atualizar(id, data);
   };
