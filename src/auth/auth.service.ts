@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable, } from "@nestjs/common";
+import {BadRequestException, HttpException, HttpStatus, Injectable, } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { AuthRepository } from "./models/auth.repository";
 import { users } from "@prisma/client";
@@ -14,7 +14,7 @@ export class AuthService {
     private readonly usuariosService : UsuariosService
   ){}
 
-  async criarToken(usuario : users ){
+  criarToken(usuario : users ){
     return {
       accessToken : this.jwtService.sign({
         id: usuario.id,
@@ -29,14 +29,28 @@ export class AuthService {
     };
   };
 
-  async verificarToken(token : string){
-    const data = this.jwtService.verify(token,{
-      issuer: "login",
-      audience: "usuarios"
-    });
+  verificarToken(token : string){
+    try {
+      const data = this.jwtService.verify(token,{
+        issuer: "login",
+        audience: "usuarios"
+      });  
+      
+      return data;
 
-    return data;
-  }
+    } catch (erro) {
+      throw new BadRequestException(erro);
+    };
+  };
+
+  isValidToken(token: string){
+    try{
+      this.verificarToken(token);
+      return true;
+    }catch (erro) {
+      return false;
+    };
+  };
 
   async registrar(data : CadastrarUsuariosDto){
     const usuario = await this.usuariosService.cadastarUsuarios(data);
