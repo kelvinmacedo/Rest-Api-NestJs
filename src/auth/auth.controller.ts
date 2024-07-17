@@ -1,10 +1,11 @@
-import { Body, Controller, Headers, HttpStatus, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Headers, HttpStatus, Patch, Post, Req, UseGuards } from "@nestjs/common";
 import { AuthLoginDto } from "./dto/auth-login.dto";
 import { AuthRegistarDto } from "./dto/auth-Registar.dto";
 import { AuthRedefinirSenhaDto } from "./dto/auth-redefinirSenha.dto";
 import { AuthResetarSenhaDto } from "./dto/auth-resetarSenha.dto";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from "./auth.guard";
+import { UsuarioDec } from "src/decorators/usuario.decorators";
 
 
 @Controller('auth')
@@ -36,8 +37,8 @@ export class AuthController{
 
   @UseGuards(AuthGuard)
   @Post('me')
-  async me(){
-    return (HttpStatus.ACCEPTED,'Sucesso!');
+  async me(@UsuarioDec('nome') usuario){
+    return {message:'Seja Bem-vindo ', usuario};
     // return this.authService.verificarToken(body);
 
   }
