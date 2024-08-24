@@ -4,8 +4,8 @@ import { AuthRegistarDto } from "./dto/auth-Registar.dto";
 import { AuthRedefinirSenhaDto } from "./dto/auth-redefinirSenha.dto";
 import { AuthResetarSenhaDto } from "./dto/auth-resetarSenha.dto";
 import { AuthService } from "./auth.service";
-import { AuthGuard } from "./auth.guard";
-import { UsuarioDec } from "src/decorators/usuario.decorators";
+import { AuthGuard } from "./../guards/auth.guard";
+import { UsuarioDecorator } from "src/decorators/usuario.decorators";
 
 
 @Controller('auth')
@@ -37,7 +37,7 @@ export class AuthController{
 
   @UseGuards(AuthGuard)
   @Post('me')
-  async me(@UsuarioDec('nome') usuario){
+  async me(@UsuarioDecorator('nome') usuario){
     return {message:'Seja Bem-vindo ', usuario};
     // return this.authService.verificarToken(body);
 

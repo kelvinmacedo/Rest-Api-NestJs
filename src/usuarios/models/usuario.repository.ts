@@ -47,19 +47,10 @@ export class UsuariosRepository{
   };
 
   async existi( id: number, email: string){
-      if(id){
-        return this.prisma.users.findFirst({
-          where :{
-            OR:[
-                {email: email},
-                {id: id}
-              ]}
-        });
-    }
-
-    return this.prisma.users.findFirst({
-      where:{email}
-    });
+      const isExiste = id ? { OR: [{ email }, { id }] } : { email };
+      return this.prisma.users.findFirst({
+        where: isExiste,
+      });
   }
 
 }

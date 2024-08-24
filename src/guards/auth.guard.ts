@@ -1,7 +1,7 @@
 import { BadRequestException, CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { AuthService } from "./../auth/auth.service";
 import { UsuariosService } from "src/usuarios/usuarios.service";
-import { UsuarioDec } from "src/decorators/usuario.decorators";
+import { UsuarioDecorator } from "src/decorators/usuario.decorators";
 
 @Injectable()
 export class AuthGuard implements CanActivate{
@@ -19,7 +19,7 @@ constructor(
       const data = this.authService.verificarToken((authorization ?? '').split(' ')[1]);
       
       req.payload = data;
-      req.usuarioDec = await this.usuariosService.buscarUsuariosPorId(data.id);      
+      req.usuarioDecorator = await this.usuariosService.buscarUsuariosPorId(data.id);      
 
       return true;
 

@@ -1,15 +1,15 @@
 import { BadRequestException, ExecutionContext, createParamDecorator } from "@nestjs/common";
 
-export const UsuarioDec = createParamDecorator(( filter : string, context : ExecutionContext) => {
+export const UsuarioDecorator = createParamDecorator(( filter : string, context : ExecutionContext) => {
 
   const req = context.switchToHttp().getRequest();
 
-  if(req.usuarioDec){
+  if(req.usuarioDecorator){
 
     if(filter){
-      return req.usuarioDec[filter];
+      return req.usuarioDecorator[filter];
     } else{
-      return req.usuarioDec;
+      return req.usuarioDecorator;
     }
 
   } else {

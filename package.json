@@ -2,7 +2,7 @@
   "name": "api-nestjs",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Kelvin Marques",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
