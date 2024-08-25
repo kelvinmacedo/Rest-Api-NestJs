@@ -17,10 +17,17 @@ export class UsuariosService {
   };
 
   async listarUsuarios (){
-    return this.usuariosRepository.listar();
+    const listar = await this.usuariosRepository.listar();
+    if (!listar || listar.length === 0 ) {
+      throw new HttpException('Nenhum usuário encontrado.', HttpStatus.OK);
+    };
+    return listar;
   };
 
   async buscarUsuariosPorId (id : number){
+    if(!id){
+      throw new HttpException('Esse id e invalido!', HttpStatus.BAD_REQUEST);
+    };
     return this.usuariosRepository.buscar(id);
   };
 
