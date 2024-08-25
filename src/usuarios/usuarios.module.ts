@@ -19,7 +19,6 @@ export class UsuariosModule implements NestModule {
     const usuariosRouters = [
       {path : 'usuarios/listar ', method : RequestMethod.GET},
       {path : 'usuarios/buscarPorId/:id', method : RequestMethod.GET},
-      {path : 'usuarios/cadastrar', method : RequestMethod.POST},
       {path : 'usuarios/editar/:id', method : RequestMethod.PUT},
       {path : 'usuarios/atualizar/:id', method : RequestMethod.PATCH}
     ]
