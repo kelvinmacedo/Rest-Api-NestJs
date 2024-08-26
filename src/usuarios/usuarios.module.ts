@@ -7,7 +7,7 @@ import { UsuarioIdCheckMiddlewares } from "src/middlewares/usuario-id-check.midd
 import { authModule } from "src/auth/auth.module";
 
 @Module({
-  imports : [PrismaModule],
+  imports : [PrismaModule, authModule],
   controllers : [UsuariosController],
   providers : [UsuariosService, UsuariosRepository],
   exports: [UsuariosService]
