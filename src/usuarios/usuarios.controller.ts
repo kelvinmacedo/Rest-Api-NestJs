@@ -1,15 +1,19 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Patch, Post, Put } from "@nestjs/common";
+import {Body, Controller, Get, HttpException, HttpStatus, Patch, Post, Put, UseGuards } from "@nestjs/common";
 import { CadastrarUsuariosDto } from "./dto/cadastrar-usuarios.dto";
 import { UsuariosService } from "./usuarios.service";
 import { AtulaizarUsuarioDto } from "./dto/atualizar-usuario.dto";
 import { EditarUsuariosDto } from "./dto/editar-usuarios.dto";
 import { ParamId } from "src/decorators/paramId.decorators";
-
+import { TipoUsuarioDecorators } from "src/decorators/tipoUsuario.decorators";
+import { TipoUsuarioGuard } from "src/guards/tipoUsuario.guard";
+import { AuthGuard } from "src/guards/auth.guard";
+@UseGuards(AuthGuard, TipoUsuarioGuard)
 @Controller('usuarios')
 export class UsuariosController {
 
   constructor(private readonly usuariosService : UsuariosService){}
-
+  
+  @TipoUsuarioDecorators(1)
   @Post('cadastrar')
   async cadastrarUsuarios( @Body() data : CadastrarUsuariosDto ){
     return this.usuariosService.cadastarUsuarios(data);
@@ -25,11 +29,13 @@ export class UsuariosController {
       return this.usuariosService.buscarUsuariosPorId(id);
   };
 
+  @TipoUsuarioDecorators(1)
   @Put('editar/:id')
   async editarUsuarios( @Body() data : EditarUsuariosDto, @ParamId() id : number){
     return this.usuariosService.editarUsuarios(id, data);
   };
 
+  @TipoUsuarioDecorators(1)
   @Patch('atualizar/:id')
   async atualizarUsuarios(@Body() data : AtulaizarUsuarioDto, @ParamId() id: number){
     return this.usuariosService.atualizarUsuarios(id, data);
