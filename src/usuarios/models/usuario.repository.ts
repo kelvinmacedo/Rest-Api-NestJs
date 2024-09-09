@@ -9,8 +9,14 @@ import { EditarUsuariosDto } from "../dto/editar-usuarios.dto";
 export class UsuariosRepository{
   constructor(private readonly prisma : PrismaService){}
 
-  async criarUsuario(data : CadastrarUsuariosDto){
+  async criarUsuario(data : CadastrarUsuariosDto): Promise<any> {
     try{
+      const validarUsuario = ['nome', 'email', 'senha']
+      for(const validado of validarUsuario){
+        if(!data[validado]){
+          throw new Error(`O campo ${validado} é obrigatorio.`);
+        };
+      };
       const criarUsuario = await this.prisma.users.create ({
         data,
       });

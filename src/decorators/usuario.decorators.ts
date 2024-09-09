@@ -4,6 +4,7 @@ export const UsuarioDecorator = createParamDecorator(( filter : string, context 
 
   const req = context.switchToHttp().getRequest();
 
+  console.log("🚀 ~ UsuarioDecorator ~ req:", req.usuarioDecorator)
   if(req.usuarioDecorator){
 
     if(filter){

@@ -37,7 +37,8 @@ export class AuthController{
 
   @UseGuards(AuthGuard)
   @Post('me')
-  async me(@UsuarioDecorator('nome') usuario){
+  async me(@UsuarioDecorator() usuario){
+    
     return {message:'Seja Bem-vindo ', usuario};
     // return this.authService.verificarToken(body);
 

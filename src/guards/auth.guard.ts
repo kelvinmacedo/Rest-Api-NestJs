@@ -23,9 +23,7 @@ constructor(
       return true;
 
     } catch (erro){
-
-      throw new BadRequestException(erro);
- 
+      throw new BadRequestException("Erro de autenticação!",erro);
     };
   };
 };

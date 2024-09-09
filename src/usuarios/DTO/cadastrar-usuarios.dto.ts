@@ -1,3 +1,4 @@
+import { Optional } from "@nestjs/common";
 import { IsEmail, IsEmpty, IsEnum, IsNotEmpty, IsOptional, IsString, IsStrongPassword } from "class-validator";
 import { TipoUsuario } from "src/enum/tipoUsuario.enum";
 
@@ -21,7 +22,7 @@ export class CadastrarUsuariosDto {
   })
   senha : string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(TipoUsuario)
-  tipoUsuario;
+  tipo_usuarios?: TipoUsuario;
 }

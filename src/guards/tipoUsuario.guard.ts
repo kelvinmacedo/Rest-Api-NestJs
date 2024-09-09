@@ -10,11 +10,16 @@ export class TipoUsuarioGuard implements CanActivate{
   
   canActivate(context: ExecutionContext){
 
-    const res = this.reflector.getAllAndOverride<TipoUsuario[]>(TIPO_USUARIO_KEY, [context.getHandler(), context.getClass()]);
-    console.log("🚀 ~ TipoUsuarioGuard ~ canActivate ~ res:", res)
-    const req = context.switchToHttp().getRequest();
+    const respostaTipoUsuario = this.reflector.getAllAndOverride<TipoUsuario[]>(TIPO_USUARIO_KEY, [context.getHandler(), context.getClass()]);
+    console.log("🚀 ~ TipoUsuarioGuard ~ canActivate ~ respostaTipoUsuario:", respostaTipoUsuario)
     
-    return true;
+    if(!respostaTipoUsuario){
+      return true;
+    }
+    const {ususraio} = context.switchToHttp().getRequest();
+    const filtrarUsuario = respostaTipoUsuario.filter(tipoUsuario => tipoUsuario === ususraio.tipoUsuario);
+    return filtrarUsuario.length > 0;
+
   }
 
 }
